@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planbServer.planb.joins.repository.JoinDAO">
+
+    <select id="findEmail" resultType="planbServer.planb.joins.model.JoinDTO">
+        select <![CDATA[REGEXP_REPLACE(user_id, '(?<=.{2}).(?=.*@)', '*') as userId]]>
+        from member
+        where user_phone = #{userPhone}
+    </select>
+
+    <update id="updateTempPw" parameterType="planbServer.planb.joins.model.JoinDTO">
+        update member
+        set user_pw = #{userPw}
+        where user_id = #{userId}
+    </update>
+
+    <select id="findPw" resultType="planbServer.planb.joins.model.JoinDTO" parameterType="planbServer.planb.joins.model.JoinDTO">
+        select user_id
+        from member
+        where user_id = #{userId}
+        and user_phone = #{userPhone}
+    </select>
+
+    <insert id="joinUser" parameterType="planbServer.planb.joins.model.JoinDTO">
+        INSERT INTO member
+            (
+                user_id,
+                user_pw,
+                user_name,
+                user_phone
+            )
+            value
+            (
+                #{userId},
+                #{userPw},
+                substring_index(#{userId}, '@', 1),
+                #{userPhone}
+            )
+    </insert>
+
+    <select id="checkEmail" resultType="planbServer.planb.joins.model.JoinDTO" parameterType="planbServer.planb.joins.model.JoinDTO">
+        select user_id
+        from member
+        where user_id = #{userId}
+    </select>
+
+    <select id="checkPhone" resultType="planbServer.planb.joins.model.JoinDTO" parameterType="planbServer.planb.joins.model.JoinDTO">
+        select user_phone
+        from member
+        where user_phone = #{userPhone}
+    </select>
+
+
+
+
+</mapper>

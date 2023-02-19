@@ -1,0 +1,32 @@
+{
+  "name": "blog-website-laravel-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "@vue/composition-api": "^1.7.1",
+    "core-js": "^3.19.3",
+    "jwt-decode": "^3.1.2",
+    "nuxt": "^2.15.8",
+    "vue": "^2.6.14",
+    "vue-infinite-loading": "^2.4.5",
+    "vue-server-renderer": "^2.6.14",
+    "vue-session": "^1.0.0",
+    "vue-slick-carousel": "^1.0.6",
+    "vue-template-compiler": "^2.6.14",
+    "vuelidate": "^0.7.7",
+    "vuetify": "^2.6.1",
+    "vuex": "^3.4.0",
+    "vuex-persistedstate": "^4.1.0",
+    "webpack": "^4.46.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.12.3"
+  }
+}

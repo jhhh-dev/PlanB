@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planbServer.planb.admin.repository.PaymentDAO">
+
+    <!--  관리자페이지 > 결제내역 조회  -->
+    <!--  INNER JOIN : 주문내역 테이블 (상품명 가져오기 위한 pro_id 추출)  -->
+    <!--  LEFT JOIN : 상품정보 테이블 (상품명 가져오기)  -->
+    <select id="getPaymentList" resultType="planbServer.planb.admin.model.PaymentDTO">
+        SELECT
+            PP.pay_id,
+            pay_type,
+            pay_price,
+            pay_date,
+            PP.imp_uid,
+            merchant_uid,
+            status,
+            PO.pro_id,
+            PR.pro_name
+        FROM PLANB.payment PP
+            INNER JOIN PLANB.order PO
+            ON PP.imp_uid = PO.pay_id
+            LEFT JOIN PLANB.product PR
+            ON PO.pro_id = PR.pro_id
+        ORDER BY pay_id DESC
+    </select>
+
+</mapper>

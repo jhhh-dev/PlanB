@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planbServer.planb.mypage.repository.UserInfoDAO">
+
+    <select id="selectUserInfo" resultType="planbServer.planb.mypage.model.MemberDTO" parameterType="planbServer.planb.mypage.model.MemberDTO">
+        select *
+        from member
+        where user_id = #{userId}
+    </select>
+
+    <select id="selectUserName" resultType="planbServer.planb.mypage.model.MemberDTO" parameterType="planbServer.planb.mypage.model.MemberDTO">
+        select user_name
+        from member
+        where user_id = #{userId}
+    </select>
+
+    <update id="updateUserName" parameterType="planbServer.planb.mypage.model.MemberDTO">
+        update member
+        set user_name = #{userName}
+        where user_id = #{userId}
+    </update>
+
+    <select id="selectNameList" resultType="string">
+        select user_name
+        from member
+    </select>
+
+    <update id="updateUserPw" parameterType="planbServer.planb.mypage.model.MemberDTO">
+        update member
+        set user_pw = #{userPw}
+        where user_id = #{userId}
+    </update>
+
+    <select id="selectPw" parameterType="planbServer.planb.mypage.model.MemberDTO" resultType="planbServer.planb.mypage.model.MemberDTO">
+        select user_pw
+        from member
+        where user_id = #{userId}
+    </select>
+
+    <update id="updateUserAddr" parameterType="planbServer.planb.mypage.model.MemberDTO">
+        update member
+        set user_addr = #{userAddr}
+        where user_id = #{userId}
+    </update>
+
+    <select id="selectBMList" resultType="planbServer.planb.mypage.model.BookMarkListDTO" parameterType="planbServer.planb.mypage.model.MemberDTO">
+        select
+            p.pro_id,
+            p.pro_name,
+            FORMAT(p.pro_price , 0) as pro_price
+        from product p
+            join bookmark b
+                on p.pro_id = b.pro_id
+        where b.user_id = #{userId}
+    </select>
+
+    <select id="selectReviewList" resultType="planbServer.planb.mypage.model.ReviewListDTO" parameterType="planbServer.planb.mypage.model.ListDTO">
+        select
+            r.review_id,
+            r.review_img,
+            p.pro_name,
+            SUBSTRING(r.review_date, 1, 10) as review_date
+        from review r
+            join product p
+                on r.pro_id = p.pro_id
+        where r.user_id = #{userId}
+        order by r.review_date desc
+        limit #{page}, 5
+    </select>
+
+    <select id="selectOrderList" resultType="planbServer.planb.mypage.model.OrderDetailDTO" parameterType="planbServer.planb.mypage.model.ListDTO">
+        select
+            p.pro_name,
+            FORMAT(y.pay_price , 0) as pay_price,
+            SUBSTRING(o.order_date, 1, 10) as order_date,
+            o.order_id
+        from PLANB.order o
+            join payment y
+                on o.pay_id = y.imp_uid
+            join product p
+                on p.pro_id = o.pro_id
+        where o.user_id = #{userId}
+        order by order_date desc
+        limit #{page}, 5
+    </select>
+
+    <select id="selectOrderDetail" resultType="planbServer.planb.mypage.model.OrderDetailDTO" parameterType="planbServer.planb.mypage.model.OrderDetailDTO">
+        SELECT o.order_id,
+            SUBSTRING(o.order_date, 1, 10) as order_date,
+            o.pro_id,
+            FORMAT(o.order_fee , 0) as order_fee,
+            o.order_reciver,
+            o.order_addr,
+            o.order_phone,
+            FORMAT(p.pay_price , 0) as pay_price,
+            p.pay_type,
+            FORMAT(t.pro_price , 0) as pro_price,
+            t.pro_name
+        FROM   PLANB.order o
+            JOIN payment p
+                ON o.pay_id = p.imp_uid
+            JOIN product t
+                ON o.pro_id = t.pro_id
+        WHERE  o.order_id = #{orderId}
+    </select>
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planbServer.planb.cscenter.repository.FaqDAO">
+
+    <select id="getFaqList" resultType="planbServer.planb.cscenter.model.FaqVO">
+        SELECT  faq_id,
+                faq_title,
+                faq_content
+        FROM    faq
+        ORDER BY faq_id DESC
+    </select>
+
+</mapper>

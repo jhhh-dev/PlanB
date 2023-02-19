@@ -1,0 +1,108 @@
+.bindBox {
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.productTable {
+    width: 100%;
+    height: auto;
+}
+
+.v-text-field {
+    margin-bottom: 15px;
+    padding-top: 0px;
+}
+
+.selectDel {
+    width: 100%;
+    height: 70px;
+
+    border: 1px solid black;
+    border-radius: 10px;
+    margin: 10px 0px 10px 0px;
+    padding: 10px;
+
+    cursor: pointer;
+    display: flex;
+}
+
+.unselectDel {
+    width: 100%;
+    height: 70px;
+
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin: 10px 0px 10px 0px;
+    padding: 10px;
+
+    cursor: pointer;
+    display: flex;
+}
+
+.deliveryTable th {
+    position: relative;
+    top: -5px;
+    color: gray;
+
+    text-align: left;
+}
+
+.priceInfo {
+    padding-top: 15px;
+}
+
+.priceInfo div {
+    margin-bottom: 5px;
+}
+
+h1 {
+    font-size: 18px;
+}
+
+.selectPayType {
+    width: 48%;
+    height: 60px;
+
+    border: 1px solid black;
+    border-radius: 10px;
+    margin: 10px 0px 10px 0px;
+
+    cursor: pointer;
+    /* text-align: center; */
+    line-height: 60px;
+
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.unselectPayType {
+    width: 48%;
+    height: 60px;
+
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin: 10px 0px 10px 0px;
+
+    cursor: pointer;
+    /* text-align: center; */
+    line-height: 60px;
+
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.checkTable td {
+    height: 70px;
+    line-height: 70px;
+    border-top: 1px solid lightgray;
+}
+
+.v-input--selection-controls {
+    margin: 5px 0px 5px 0px;
+    
+}

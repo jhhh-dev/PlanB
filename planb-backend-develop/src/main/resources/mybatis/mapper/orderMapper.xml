@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planbServer.planb.admin.repository.OrderDAO">
+
+    <!--  관리자페이지 > 주문내역 조회  -->
+    <select id="getOrderList" resultType="planbServer.planb.admin.model.OrderDTO">
+        SELECT
+            order_id,
+            user_id,
+            order_date,
+            order_fee,
+            order_reciver,
+            order_addr,
+            order_phone,
+            PO.pay_id,
+            PO.pro_id,
+            PR.pro_name
+        FROM PLANB.order PO
+            INNER JOIN PLANB.payment PP
+            ON PO.pay_id = PP.imp_uid
+            LEFT JOIN PLANB.product PR
+            ON PO.pro_id = PR.pro_id
+        ORDER BY order_id DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planbServer.planb.review.repository.ReviewDAO">
+
+    <insert id="reviewInsert" parameterType="planbServer.planb.review.model.ReviewDTO">
+        insert into review
+            (
+                pro_id,
+                user_id,
+                order_id,
+                review_content,
+                review_img
+            )
+            values
+            (
+                #{proId},
+                #{userId},
+                #{orderId},
+                #{reviewContent},
+                #{reviewImg}
+            )
+    </insert>
+
+    <select id="reviewCheck" resultType="Integer" parameterType="planbServer.planb.review.model.ReviewDTO">
+        select count(order_id)
+        from review
+        where order_id = #{orderId}
+    </select>
+
+    <select id="likeCount" resultType="int" parameterType="Integer">
+        select count(review_id) as likeCount
+        from PLANB.like
+        where review_id=#{reviewId}
+    </select>
+
+    <select id="reviewDetail" resultType="planbServer.planb.review.model.ReviewDTO" parameterType="Integer">
+        select
+            u.user_name,
+            r.review_img,
+            p.pro_name,
+            r.review_content,
+            r.pro_id
+        from review r
+            join member u
+                on r.user_id = u.user_id
+            join product p
+                on r.pro_id = p.pro_id
+        where r.review_id = #{reviewId}
+    </select>
+
+    <insert id="insertLike" parameterType="planbServer.planb.review.model.LikeDTO">
+        insert into PLANB.like
+            (
+                review_id,
+                user_id
+            )
+        values
+            (
+                #{reviewId},
+                #{userId}
+            )
+    </insert>
+
+    <delete id="deleteLike" parameterType="planbServer.planb.review.model.LikeDTO">
+        delete from PLANB.like
+        where review_id = #{reviewId}
+        and user_id = #{userId}
+    </delete>
+
+    <select id="checkLike" resultType="planbServer.planb.review.model.LikeDTO" parameterType="planbServer.planb.review.model.LikeDTO">
+        select review_id
+        from PLANB.like
+        where review_id = #{reviewId}
+        and user_id = #{userId}
+    </select>
+
+    <delete id="reviewDelete" parameterType="planbServer.planb.review.model.ReviewDTO">
+        delete from PLANB.review
+        where review_id = #{reviewId}
+        and user_id = #{userId}
+    </delete>
+
+
+
+    <select id="reviewListPageRecentfilter" parameterType="planbServer.planb.review.model.PageDTO" resultType="planbServer.planb.review.model.ReviewDTO">
+        select
+            r.review_id,
+            u.user_name,
+            r.review_img,
+            p.pro_name,
+            r.review_content,
+            ifnull(likecount.rcount,0) as likeCount
+        from review r
+            join member u
+                on r.user_id = u.user_id
+            join product p
+                on r.pro_id = p.pro_id
+            left outer join
+                (select count(review_id) as rcount, review_id
+                from PLANB.like
+                group by review_id) as likecount
+        on likecount.review_id = r.review_id
+        <choose>
+            <when test="option == 1">
+                order by r.review_date desc
+            </when>
+            <otherwise>
+                order by likeCount desc , r.review_date desc
+            </otherwise>
+        </choose>
+
+        LIMIT ${offset}, 12
+    </select>
+
+
+
+</mapper>

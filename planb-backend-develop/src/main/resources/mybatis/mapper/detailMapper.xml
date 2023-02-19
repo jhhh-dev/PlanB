@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="planbServer.planb.detail.repository.DetailDAO">
+
+    <!--  상품 상세 정보 가져오기  -->
+    <select id="getDetailInfo" resultType="planbServer.planb.detail.model.DetailProductDTO" parameterType="int">
+        select
+            pro_id,
+            pro_name,
+            pro_brand,
+            pro_price,
+            pro_size,
+            pro_img,
+            (SELECT count(*) FROM PLANB.bookmark PB WHERE PB.pro_id = PP.pro_id) bookmark_count
+        from PLANB.product PP
+        where pro_id = #{proId}
+    </select>
+
+    <!--  상품의 스타일 가져오기  -->
+    <select id="getStyle" resultType="planbServer.planb.detail.model.ReviewDTO" parameterType="int">
+        SELECT
+            review_id,
+            PR.pro_id,
+            order_id,
+            user_id,
+            review_content,
+            review_img,
+            review_date,
+            PP.pro_name
+        FROM PLANB.review PR
+            LEFT JOIN PLANB.product PP
+            ON PR.pro_id = PP.pro_id
+        where PR.pro_id = #{proId}
+            AND review_img IS NOT NULL
+        order by rand()
+        limit 4
+    </select>
+
+    <!--  동일 브랜드 다른 상품 가져오기  -->
+    <select id="getBrandProduct" resultType="planbServer.planb.detail.model.DetailProductDTO" parameterType="int">
+        SELECT pro_id,
+                pro_name,
+                pro_brand,
+                pro_price,
+                pro_size,
+                pro_img
+        FROM    PLANB.product
+        WHERE   pro_id != #{proId}
+                AND pro_brand = (SELECT pro_brand
+                                FROM   product
+                                WHERE  pro_id = #{proId})
+                AND pro_hide = 1
+        ORDER  BY Rand()
+        LIMIT  4;
+    </select>
+
+    <!--  아임포트 결제정보 Insert  -->
+    <insert id="insertPayment" parameterType="planbServer.planb.detail.model.PaymentDTO">
+        INSERT INTO PLANB.payment
+        VALUES
+        (NULL,
+        #{payType},
+        #{payPrice},
+        Now(),
+        #{impUid},
+        #{merchantUid},
+        #{status}
+        );
+    </insert>
+
+    <!--  결제성공 후 주문정보 Insert  -->
+    <insert id="insertOrder" parameterType="planbServer.planb.detail.model.OrderDTO">
+        INSERT INTO PLANB.order
+        VALUES
+        (NULL,
+        #{userId},
+        Now(),
+        #{proId},
+        #{orderFee},
+        #{orderReciver},
+        #{orderAddr},
+        #{orderPhone},
+        #{payId}
+        );
+    </insert>
+
+    <!-- 조회수 증가 처리 -->
+    <update id="plusReadCount">
+        update product set pro_cnt = pro_cnt+1
+        where pro_id=#{proId}
+    </update>
+
+    <!--  관심상품 등록 여부 체크  -->
+    <select id="getBookmarkCount" parameterType="planbServer.planb.detail.model.BookmarkVO" resultType="int">
+        select count(*) from PLANB.bookmark
+        where user_id = #{userId}
+        AND pro_id = #{proId}
+    </select>
+
+    <!--  관심상품 추가  -->
+    <insert id="insertBookmark" parameterType="planbServer.planb.detail.model.BookmarkVO">
+        INSERT INTO PLANB.bookmark
+        VALUES (
+        #{userId},
+        #{proId}
+        );
+    </insert>
+
+    <!--  관심상품 제거  -->
+    <delete id="deleteBookmark" parameterType="planbServer.planb.detail.model.BookmarkVO">
+        delete from PLANB.bookmark
+        where user_id = #{userId}
+        AND pro_id = #{proId}
+    </delete>
+
+    <!--  리뷰에 대한 Like 정보 가져오기(1person 1like 1product)  -->
+    <select id="getReviewLike" parameterType="planbServer.planb.review.model.LikeDTO" resultType="int">
+        select count(*) from PLANB.like
+        where review_id = #{reviewId}
+        and user_id = #{userId}
+    </select>
+
+    <!--  리뷰에 대한 Like Count 전체 가져오기 (전체)  -->
+    <select id="getLikeCount" parameterType="int" resultType="int">
+        select count(*) from PLANB.like
+        where review_id = #{reviewId}
+    </select>
+
+    <!--  Like 좋아요 Insert  -->
+    <insert id="insertLike" parameterType="planbServer.planb.review.model.LikeDTO">
+        INSERT INTO PLANB.like
+        VALUES (
+            #{reviewId},
+            #{userId}
+        );
+    </insert>
+
+    <!--  Like 좋아요 Delete  -->
+    <delete id="deleteLike" parameterType="planbServer.planb.review.model.LikeDTO">
+        delete from PLANB.like
+        where
+            review_id = #{reviewId}
+        AND
+            user_id = #{userId}
+    </delete>
+
+</mapper>
