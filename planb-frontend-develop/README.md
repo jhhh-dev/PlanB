@@ -1,8 +1,4 @@
-# blog-website-laravel-api
 
-<img src='./img1.png'> <br>
-
-<img src='./img2.png'> <br>
 
 ## Build Setup
 
