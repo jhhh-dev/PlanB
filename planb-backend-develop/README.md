@@ -1,4 +1,4 @@
-# 연습용 프로젝트
+# 프로젝트
 
 - Spring boot 기본 구조 세팅
     - controller, model, repository(mapper), service
